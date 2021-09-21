@@ -1,0 +1,26 @@
+{
+  "name": "nodejs-fundamentals",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "start:task1": "nodemon task1/index.js",
+    "start:task2": "nodemon task2/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panderium-art/EPAM-NodeJS-Training.git"
+  },
+  "author": "Artsiom Mialkumau",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/panderium-art/EPAM-NodeJS-Training/issues"
+  },
+  "homepage": "https://github.com/panderium-art/EPAM-NodeJS-Training#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.10"
+  }
+}

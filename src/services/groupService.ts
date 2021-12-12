@@ -1,6 +1,8 @@
 import { Service } from "typedi";
 import { groupDAO } from "../dao/groupDao";
 import { BaseGroupDTO, GroupDTO } from "../types/groupDTO";
+import { AppError } from '../error';
+import { HTTP_STATUS_CODE } from '../enums/statusCodes';
 
 @Service()
 export class GroupService {
@@ -13,6 +15,12 @@ export class GroupService {
   }
 
   public async getGroupById(id: number) {
+    if (isNaN(id)) {
+      throw new AppError(
+        HTTP_STATUS_CODE.BAD_REQUEST,
+        'Argument id: Got invalid value NaN, should be number'
+      );
+    }
     return this.groupDAO.findById(id);
   }
 

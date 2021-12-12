@@ -1,84 +1,120 @@
-import { PrismaClient } from ".prisma/client";
 import { Service } from "typedi";
 import type { BaseGroupDTO, GroupDTO } from "../types/groupDTO";
-
-const prisma = new PrismaClient();
+import prisma from "../client";
+import { prismaErrorHandler } from '../helpers/errorHelper';
 
 @Service()
 export class groupDAO {
   public async findAll(){
-    const groups = await prisma.group.findMany({ orderBy: {
-      id: 'asc',
-    }, });
-    return groups;
+    try {
+      const groups = await prisma.group.findMany({ orderBy: {
+        id: 'asc',
+      }, });
+      return groups;
+    } catch (error: any) {
+      const processedPrismaError = prismaErrorHandler(error);
+      throw processedPrismaError;
+    }
+
   }
 
   public async findById(id: number){
-    return prisma.group.findUnique({
-      where:{
-        id,
-      },
-    });
+    try {
+      const group = await prisma.group.findUnique({
+        where:{
+          id,
+        },
+      });
+      return group;
+    } catch (error: any) {
+      const processedPrismaError = prismaErrorHandler(error);
+      throw processedPrismaError;
+    }
   }
 
   public async create(group: BaseGroupDTO){
-    const { name, permissions } = group;
-    const createdGroup = await prisma.group.create({
-      data: {
-        name,
-        permissions
-      }
-    });
-    return createdGroup;
+    try {
+      const { name, permissions } = group;
+      const createdGroup = await prisma.group.create({
+        data: {
+          name,
+          permissions
+        }
+      });
+      return createdGroup;
+    } catch (error: any) {
+      const processedPrismaError = prismaErrorHandler(error);
+      throw processedPrismaError;
+    }
   }
 
   public async update({ id, name, permissions }: GroupDTO) {
-    const group = await prisma.group.update({
-      where: { id },
-      data: { name, permissions }
-    });
-    return group;
+    try {
+      const group = await prisma.group.update({
+        where: { id },
+        data: { name, permissions }
+      });
+      return group;
+    } catch (error: any) {
+      const processedPrismaError = prismaErrorHandler(error);
+      throw processedPrismaError;
+    }
   }
 
   public async remove(id: number) {
-    const group = await prisma.group.delete({
-      where: {
-        id,
-      },
-    });
-    return group;
+    try {
+      const group = await prisma.group.delete({
+        where: {
+          id,
+        },
+      });
+      return group;
+    } catch (error: any) {
+      const processedPrismaError = prismaErrorHandler(error);
+      throw processedPrismaError;
+    }
   }
 
   public async getGroupMembers(groupId: number) {
-    const members = await prisma.group.findUnique({
-      where: {
-        id: groupId,
-      },
-      select: {
-        id: true,
-        members: {
-          select: {
-            user: true,
+    try {
+      const members = await prisma.group.findUnique({
+        where: {
+          id: groupId,
+        },
+        select: {
+          id: true,
+          members: {
+            select: {
+              user: true,
+            }
           }
         }
-      }
-    });
+      });
 
-    return members;
+      return members;
+    } catch (error: any) {
+      const processedPrismaError = prismaErrorHandler(error);
+      throw processedPrismaError;
+    }
   }
 
   public async addMembersToGroup(groupId: number, members: string []) {
-    const updatedGroup = await prisma.group.update({
-      where: {
-        id: groupId,
-      },
-      data: {
-        members : {
-          create: members.map(userId => ({ userId }))
+    try {
+      const updatedGroup = await prisma.group.update({
+        where: {
+          id: groupId,
+        },
+        data: {
+          members : {
+            create: members.map(userId => ({ userId }))
+          }
         }
-      }
-    });
+      });
 
-    return updatedGroup;
+      return updatedGroup;
+    } catch (error: any) {
+      const processedPrismaError = prismaErrorHandler(error);
+      throw processedPrismaError;
+    }
   }
 }

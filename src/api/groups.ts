@@ -1,45 +1,47 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { Container } from "typedi";
 import { GroupService } from "../services/groupService";
 import { BaseGroupDTO, GroupDTO } from "../types/groupDTO";
+import { HTTP_STATUS_CODE } from "../enums/statusCodes";
+import Logger from "../config/winstonLogger";
+import { createErrorString } from '../helpers/loggingHelper';
 
 export const groupsRouter = express.Router();
 const groupService = Container.get(GroupService);
 
-const getAllGroups = async (_req: Request, res: Response, next: NextFunction) => {
+const getAllGroups = async (req: Request, res: Response) => {
   try {
     const groups = await groupService.getAllGroups();
-    res.status(200).send(groups);
-  } catch (error) {
-    next(error);
+    res.status(HTTP_STATUS_CODE.OK).send(groups);
+  } catch (error: any) {
+    Logger.error(createErrorString(error.message, 'getAllGroups', req));
+    res.status(error.status).json({ message: error.message });
   }
 };
 
-const getGroupById = async (req: Request, res: Response, next: NextFunction) => {
+const getGroupById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const group = await groupService.getGroupById(Number(id));
-
-    if(!group) {
-      return res.status(404).send({ error: `Group ${id} not found!` });
-    }
-    res.status(200).send(group);
-  } catch (error) {
-    next(error);
+    res.status(HTTP_STATUS_CODE.OK).send(group);
+  } catch (error: any) {
+    Logger.error(createErrorString(error.message, 'getGroupById', req));
+    res.status(error.status).json({ message: error.message });
   }
 };
 
-const createGroup = async (req: Request, res: Response, next: NextFunction) => {
+const createGroup = async (req: Request, res: Response) => {
   try {
     const groupDTO = req.body as BaseGroupDTO;
     const group = await groupService.createGroup(groupDTO);
-    res.status(201).json(group);
-  } catch (error) {
-    next(error);
+    res.status(HTTP_STATUS_CODE.CREATED).json(group);
+  } catch (error: any) {
+    Logger.error(createErrorString(error.message, 'createGroup', req));
+    res.status(error.status).json({ message: error.message });
   }
 };
 
-const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
+const updateGroup = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { name, permissions } = req.body as BaseGroupDTO;
@@ -49,50 +51,47 @@ const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
       permissions
     };
     const group = await groupService.updateGroup(groupDTO);
-
-    if(!group){
-      return res.status(404).send({ error: `Group ${id} not found!` });
-    }
-
-    res.status(200).json({ message: `Group with ${id} is updated`, group });
-  } catch (error) {
-    next(error);
+    res.status(HTTP_STATUS_CODE.OK)
+      .json({ message: `Group with ${id} is updated`, group });
+  } catch (error: any) {
+    Logger.error(createErrorString(error.message, 'updateGroup', req));
+    res.status(error.status).json({ message: error.message });
   }
 };
 
-const removeGroup = async (req: Request, res: Response, next: NextFunction) => {
+const removeGroup = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const group = await groupService.removeGroup(Number(id));
-
-    res.status(200).json({ message: `Group ${group.name} was deleted` });
-  } catch (error) {
-    next(error);
+    res.status(HTTP_STATUS_CODE.OK).json({ message: `Group ${group?.name} was deleted` });
+  } catch (error: any) {
+    Logger.error(createErrorString(error.message, 'removeGroup', req));
+    res.status(error.status).json({ message: error.message });
   }
 };
 
-const addUsersToGroup = async (req: Request, res: Response, next: NextFunction) => {
+const addUsersToGroup = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { members } = req.body;
 
     const updatedGroup = await groupService.addUsersToGroup(Number(id), members);
 
-    res.status(200).json(updatedGroup);
-  } catch (error) {
-    next(error);
+    res.status(HTTP_STATUS_CODE.OK).json(updatedGroup);
+  } catch (error: any) {
+    Logger.error(createErrorString(error.message, 'addUsersToGroup', req));
+    res.status(error.status).json({ message: error.message });
   }
 };
 
-const getGroupUsers = async (req: Request, res: Response, next: NextFunction) => {
+const getGroupUsers = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-
     const members = await groupService.getGroupMembers(Number(id));
-
-    res.status(200).json(members);
-  } catch (error) {
-    next(error);
+    res.status(HTTP_STATUS_CODE.OK).json(members);
+  } catch (error: any) {
+    Logger.error(createErrorString(error.message, 'getGroupUsers', req));
+    res.status(error.status).json({ message: error.message });
   }
 };
 

@@ -1,8 +1,9 @@
 node_modules/
-/.idea
+.idea
 .vscode
-/.DS_Store
+.DS_Store
 dist/
 results/
 build/
 db/
+logs/

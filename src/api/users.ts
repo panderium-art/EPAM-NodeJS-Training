@@ -11,6 +11,7 @@ import { UserFilter } from "../types/filters";
 import Logger from '../config/winstonLogger';
 import { HTTP_STATUS_CODE } from '../enums/statusCodes';
 import { createErrorString } from '../helpers/loggingHelper';
+import { authenticateToken } from '../middlewares/authenticateToken';
 
 export const usersRouter = express.Router();
 const validator = createValidator({ passError: true });
@@ -89,8 +90,8 @@ const removeUser = async (req: Request, res: Response) => {
   }
 };
 
-usersRouter.get('/', getUsers);
-usersRouter.get('/:id', getUserById);
-usersRouter.post('/', validator.body(reqBodySchema) , createUser);
-usersRouter.put('/:id', validator.body(reqBodySchema), updateUser);
-usersRouter.delete('/:id', removeUser);
+usersRouter.get('/', authenticateToken, getUsers);
+usersRouter.get('/:id', authenticateToken, getUserById);
+usersRouter.post('/', authenticateToken, validator.body(reqBodySchema) , createUser);
+usersRouter.put('/:id', authenticateToken, validator.body(reqBodySchema), updateUser);
+usersRouter.delete('/:id', authenticateToken, removeUser);

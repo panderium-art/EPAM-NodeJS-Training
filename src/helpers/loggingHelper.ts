@@ -13,5 +13,6 @@ const getRequestMetaData = (req: Request) => ({
   body: req.body || null,
   method: req.method || null,
   params: req.params || null,
-  queryParams: req.query || null
+  queryParams: req.query || null,
+  headers: req.headers || null,
 });

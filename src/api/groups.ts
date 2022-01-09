@@ -5,6 +5,7 @@ import { BaseGroupDTO, GroupDTO } from "../types/groupDTO";
 import { HTTP_STATUS_CODE } from "../enums/statusCodes";
 import Logger from "../config/winstonLogger";
 import { createErrorString } from '../helpers/loggingHelper';
+import { authenticateToken } from "../middlewares/authenticateToken";
 
 export const groupsRouter = express.Router();
 const groupService = Container.get(GroupService);
@@ -95,12 +96,12 @@ const getGroupUsers = async (req: Request, res: Response) => {
   }
 };
 
-groupsRouter.get('/', getAllGroups);
-groupsRouter.get('/:id', getGroupById);
-groupsRouter.post('/', createGroup);
-groupsRouter.put('/:id', updateGroup);
-groupsRouter.delete('/:id', removeGroup);
-groupsRouter.post('/:id/members', addUsersToGroup);
-groupsRouter.get('/:id/members', getGroupUsers);
+groupsRouter.get('/', authenticateToken, getAllGroups);
+groupsRouter.get('/:id', authenticateToken, getGroupById);
+groupsRouter.post('/', authenticateToken, createGroup);
+groupsRouter.put('/:id', authenticateToken, updateGroup);
+groupsRouter.delete('/:id', authenticateToken, removeGroup);
+groupsRouter.post('/:id/members', authenticateToken, addUsersToGroup);
+groupsRouter.get('/:id/members', authenticateToken, getGroupUsers);
 
 

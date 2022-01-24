@@ -16,7 +16,7 @@ interface IUserDao {
 
 prismaSoftDeteleMiddleware(prisma);
 @Service()
-export class userDAO implements IUserDao {
+export class UserDAO implements IUserDao {
 
   public async findAll(filters:UserFilter) {
     try {

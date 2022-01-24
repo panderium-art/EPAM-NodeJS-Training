@@ -10,7 +10,7 @@ import { authenticateToken } from "../middlewares/authenticateToken";
 export const groupsRouter = express.Router();
 const groupService = Container.get(GroupService);
 
-const getAllGroups = async (req: Request, res: Response) => {
+export const getAllGroups = async (req: Request, res: Response) => {
   try {
     const groups = await groupService.getAllGroups();
     res.status(HTTP_STATUS_CODE.OK).send(groups);
@@ -20,7 +20,7 @@ const getAllGroups = async (req: Request, res: Response) => {
   }
 };
 
-const getGroupById = async (req: Request, res: Response) => {
+export const getGroupById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const group = await groupService.getGroupById(Number(id));
@@ -31,18 +31,18 @@ const getGroupById = async (req: Request, res: Response) => {
   }
 };
 
-const createGroup = async (req: Request, res: Response) => {
+export const createGroup = async (req: Request, res: Response) => {
   try {
     const groupDTO = req.body as BaseGroupDTO;
     const group = await groupService.createGroup(groupDTO);
-    res.status(HTTP_STATUS_CODE.CREATED).json(group);
+    res.status(HTTP_STATUS_CODE.CREATED).send(group);
   } catch (error: any) {
     Logger.error(createErrorString(error.message, 'createGroup', req));
     res.status(error.status).json({ message: error.message });
   }
 };
 
-const updateGroup = async (req: Request, res: Response) => {
+export const updateGroup = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { name, permissions } = req.body as BaseGroupDTO;
@@ -60,7 +60,7 @@ const updateGroup = async (req: Request, res: Response) => {
   }
 };
 
-const removeGroup = async (req: Request, res: Response) => {
+export const removeGroup = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const group = await groupService.removeGroup(Number(id));
@@ -71,25 +71,25 @@ const removeGroup = async (req: Request, res: Response) => {
   }
 };
 
-const addUsersToGroup = async (req: Request, res: Response) => {
+export const addUsersToGroup = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { members } = req.body;
 
     const updatedGroup = await groupService.addUsersToGroup(Number(id), members);
 
-    res.status(HTTP_STATUS_CODE.OK).json(updatedGroup);
+    res.status(HTTP_STATUS_CODE.OK).send(updatedGroup);
   } catch (error: any) {
     Logger.error(createErrorString(error.message, 'addUsersToGroup', req));
     res.status(error.status).json({ message: error.message });
   }
 };
 
-const getGroupUsers = async (req: Request, res: Response) => {
+export const getGroupUsers = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const members = await groupService.getGroupMembers(Number(id));
-    res.status(HTTP_STATUS_CODE.OK).json(members);
+    res.status(HTTP_STATUS_CODE.OK).send(members);
   } catch (error: any) {
     Logger.error(createErrorString(error.message, 'getGroupUsers', req));
     res.status(error.status).json({ message: error.message });

@@ -4,7 +4,7 @@ import prisma from "../client";
 import { prismaErrorHandler } from '../helpers/errorHelper';
 
 @Service()
-export class groupDAO {
+export class GroupDAO {
   public async findAll(){
     try {
       const groups = await prisma.group.findMany({ orderBy: {

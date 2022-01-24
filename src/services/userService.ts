@@ -1,7 +1,7 @@
 /* eslint-disable prefer-rest-params */
 import 'reflect-metadata';
 import { Service } from 'typedi';
-import { userDAO } from "../dao/userDao";
+import { UserDAO } from "../dao/userDao";
 import { BaseUserDTO, UserDTO } from "../types/userDTO";
 import { UserFilter } from "../types/filters";
 import { AppError } from '../error';
@@ -10,7 +10,7 @@ import { HTTP_STATUS_CODE } from '../enums/statusCodes';
 @Service()
 export class UserService {
   constructor(
-        private userDAO: userDAO,
+        private userDAO: UserDAO,
   ){}
 
   public async getUsers(filters: UserFilter) {

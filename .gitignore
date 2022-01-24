@@ -7,3 +7,4 @@ results/
 build/
 db/
 logs/
+coverage/

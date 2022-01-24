@@ -23,14 +23,7 @@ process.on('uncaughtException', err => {
 
 dotenv.config();
 
-if (!process.env.PORT) {
-  Logger.error('PORT was not provided!');
-  process.exit(1);
-}
-
-const PORT: number = parseInt(process.env.PORT as string, 10);
-
-const app:express.Application = express();
+export const app:express.Application = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
@@ -44,7 +37,4 @@ app.use('/api/v1/groups/', groupsRouter);
 app.use(joiErrorHandler);
 app.use(failSafeErrorHandler);
 
-app.listen(PORT, () => {
-  Logger.info(`Listening on port ${PORT}`);
-});
 

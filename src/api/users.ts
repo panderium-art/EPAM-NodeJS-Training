@@ -14,10 +14,10 @@ import { createErrorString } from '../helpers/loggingHelper';
 import { authenticateToken } from '../middlewares/authenticateToken';
 
 export const usersRouter = express.Router();
-const validator = createValidator({ passError: true });
 const userService = Container.get(UserService);
+const validator = createValidator({ passError: true });
 
-const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (req: Request, res: Response) => {
   try {
     const filters: UserFilter = req.query;
     const users = await userService.getUsers(filters);
@@ -28,7 +28,7 @@ const getUsers = async (req: Request, res: Response) => {
   }
 };
 
-const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const user = await userService.getUserById(id);
@@ -40,7 +40,7 @@ const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-const createUser = async (
+export const createUser = async (
   req: ValidatedRequest<IRequestBodySchema>,
   res: Response,
 ) => {
@@ -48,14 +48,14 @@ const createUser = async (
     const userDTO = req.body as BaseUserDTO;
     const user = await userService.createUser(userDTO);
 
-    res.status(HTTP_STATUS_CODE.CREATED).json(user);
+    res.status(HTTP_STATUS_CODE.CREATED).send(user);
   } catch (error: any) {
     Logger.error(createErrorString(error.message, 'createUser', req));
     res.status(error.status).json({ message: error.message });
   }
 };
 
-const updateUser = async (
+export const updateUser = async (
   req: ValidatedRequest<IRequestBodySchema>,
   res: Response,
 ) => {
@@ -69,21 +69,21 @@ const updateUser = async (
       age,
     };
     const user = await userService.updateUser(userDTO);
-    res.status(HTTP_STATUS_CODE.OK).send({ message: `User ${id} was updated`, user });
+    res.status(HTTP_STATUS_CODE.OK).json({ message: `User ${id} was updated`, user });
   } catch (error: any) {
     Logger.error(createErrorString(error.message, 'updateUser', req));
     res.status(error.status).json({ message: error.message });
   }
 };
 
-const removeUser = async (req: Request, res: Response) => {
+export const removeUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
     const removedUserId = await userService.removeUser(id);
 
     res.status(HTTP_STATUS_CODE.OK)
-      .send({ message: `User ${removedUserId} is soft deleted` });
+      .json({ message: `User ${removedUserId} is soft deleted` });
   } catch (error: any) {
     Logger.error(createErrorString(error.message, 'removeUser', req));
     res.status(error.status).json({ message: error.message });

@@ -1,5 +1,6 @@
+import 'reflect-metadata';
 import { Service } from "typedi";
-import { groupDAO } from "../dao/groupDao";
+import { GroupDAO } from "../dao/groupDao";
 import { BaseGroupDTO, GroupDTO } from "../types/groupDTO";
 import { AppError } from '../error';
 import { HTTP_STATUS_CODE } from '../enums/statusCodes';
@@ -7,7 +8,7 @@ import { HTTP_STATUS_CODE } from '../enums/statusCodes';
 @Service()
 export class GroupService {
   constructor(
-    private groupDAO: groupDAO
+    private groupDAO: GroupDAO
   ){}
 
   public async getAllGroups() {
